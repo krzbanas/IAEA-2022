@@ -1,7 +1,7 @@
 # IAEA-2022
 
 This is the repository with the educational, supplementary materials for the two lectures at Workshop
-"Advanced Training Course on Characterization, Dating and Data Interpretation of Natural Heritage Materials and Objects with Accelerator-Based and Complementary Analytical Techniques" 
+**Advanced Training Course on Characterization, Dating and Data Interpretation of Natural Heritage Materials and Objects with Accelerator-Based and Complementary Analytical Techniques**
 17-21 October 2022, from 2-6 pm every day (Vienna time). 
 
 
