@@ -1,0 +1,1210 @@
+---
+title: "R Environment:"
+subtitle: "open source platform for data processing: case studies"
+author: "Krzysztof Banas"
+date: 19.10.2022
+format: 
+    revealjs:
+        chalkboard: 
+          boardmarker-width: 5
+from: markdown+emoji
+execute:
+  echo: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Overview
+
+::: incremental
+-   Intro :wave:
+-   Workshop materials :arrow_down:
+-   Time :clock9:
+-   Lecture 3.2 plan :clipboard:
+:::
+
+## Lecture 3.2 plan
+
+::: incremental
+1.  What is R? How can it ease the burden of repeated reporting?
+2.  Basic functions for manipulating data
+3.  Using R effectively
+4.  More data manipulation
+5.  Visualizing data
+6.  A peek at advanced topics
+:::
+
+## Accessing workshop materials
+
+![](FIGURES/GitHub.png){fig-align="center" width="1200"}
+
+<br>
+
+<https://github.com/krzbanas/IAEA-2022>
+
+click big green Code button and select "Download ZIP"
+
+## What is R?
+
+::: {style="text-align: center"}
+R is an open-source ([**free**]{style="color:#cc0000"}!) scripting
+language for working with data
+:::
+
+## The benefits of R
+
+<br>
+
+The magic of R is that it's [**reproducible**]{style="color:#cc0000"}
+(by someone else *or* by yourself in one year)
+
+<br>
+
+Data is separated from code
+
+------------------------------------------------------------------------
+
+## Download and install R
+
+::: columns
+::: {.column width="50%"}
+-   <https://cran.r-project.org>
+-   open-source
+-   multi OS support
+-   Windows
+-   MacOS
+-   Linux (Debian, Ubuntu, Fedora/Redhat)
+:::
+
+::: {.column width="50%"}
+![](FIGURES/R-CRAN.png){fig-align="center"}
+:::
+:::
+
+## Download and install RStudio (Posit in the future)
+
+::: columns
+::: {.column width="50%"}
+-   <https://www.rstudio.com>
+-   open-source
+-   multi OS support
+-   Windows
+-   MacOS
+-   Linux (Debian, Ubuntu, Fedora/Redhat)
+:::
+
+::: {.column width="50%"}
+![](FIGURES/R-Studio-install.png){fig-align="center"}
+:::
+:::
+
+## RStudio = Posit in the near future
+
+::: columns
+::: {.column width="40%"}
+-   open-source
+-   multi OS support
+-   in October 2022 new name: Posit
+:::
+
+::: {.column width="60%"}
+![](FIGURES/POSIT.png){fig-align="center"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Navigating RStudio
+
+::: {.absolute top="10%" left="0" width="1031" height="529"}
+::: {style="text-align: center"}
+![](FIGURES/RStudio1.png)
+:::
+:::
+
+::: {.absolute top="66%" left="55%"}
+::: {style="color: #cc0000"}
+project files are here
+:::
+:::
+
+. . .
+
+::: {.absolute top="28%" left="70%"}
+::: {style="color: #cc0000"}
+imported data shows up here
+:::
+:::
+
+. . .
+
+::: {.absolute top="50%" left="10%"}
+::: {style="color: #cc0000"}
+code *can* go here
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Navigating RStudio
+
+::: {.absolute top="10%" left="0" width="1031" height="529"}
+::: {style="text-align: center"}
+![](FIGURES/RStudio2.png)
+:::
+:::
+
+::: {.absolute top="66%" left="55%"}
+::: {style="color: #cc0000"}
+project files are here
+:::
+:::
+
+::: {.absolute top="28%" left="70%"}
+::: {style="color: #cc0000"}
+imported data shows up here
+:::
+:::
+
+::: {.absolute top="35%" left="25%"}
+::: {style="color: #cc0000"}
+code can also<br>go here
+:::
+:::
+
+## Using R
+
+::: columns
+::: {.column width="50%"}
+<br> <br> You can use R via *packages*
+:::
+
+::: fragment
+<br/> ...which contain *functions*
+:::
+
+::: fragment
+<br> ...which are just *verbs*
+:::
+:::
+
+::: {.column width="50%"}
+::: fragment
+![](FIGURES/tidyverse.png){.absolute top="70" left="530" height="574"
+width="499"}
+:::
+:::
+
+## Most valuable packages in natural heritage materials characterization
+
+-   tidyverse (ggplot2, dplyr, tidyr, purrr, readr, stringr)
+-   plotly
+-   Shiny
+-   spectroscopy: hyperSpec, Chemospec
+-   recipes, H2O, lime, parsnip
+-   timetk, Modeltime
+-   knitr, RMarkdown, quarto
+
+## Dataset: Soil samples
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(robCompositions)
+elements01<-gemas
+elements<-elements01%>%select(-c("longitude", "latitude", "Xcoord", "Ycoord", "sand", "silt", "clay", "LOI"))
+opts <- options(knitr.kable.NA = "")
+```
+
+::: {style="text-align: center"}
+`elements`
+:::
+
+<br>
+
+::: {style="font-size: 0.75em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% head(6))
+```
+:::
+
+# Basic data manipulation
+
+------------------------------------------------------------------------
+
+## Useful operators
+
+<br> <br>
+
+::: columns
+::: {.column width="15%"}
+::: {style="font-size: 1.75em; text-align: center"}
+`<-`
+:::
+:::
+
+::: {.column width="30%"}
+::: {style="font-size: 1.5em; text-align: center"}
+"save as"
+:::
+:::
+
+::: {.column width="55%"}
+::: {style="font-size: 1.5em"}
+`opt + -` <br> `Alt + -`
+:::
+:::
+:::
+
+. . .
+
+::: columns
+::: {.column width="15%"}
+::: {style="font-size: 1.75em; text-align: center"}
+`%>%`
+:::
+:::
+
+::: {.column width="30%"}
+::: {style="font-size: 1.5em; text-align: center"}
+"and then"
+:::
+:::
+
+::: {.column width="55%"}
+::: {style="font-size: 1.5em"}
+`Cmd + shift + m`<br> `Ctrl + Shift + m`
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Common functions
+
+<br>
+
+::: {.fragment .semi-fade-out}
+`filter` keeps or discards rows (aka observations)
+
+`select` keeps or discards columns (aka variables)
+
+`arrange` sorts data set by certain variable(s)
+
+`count` tallies data set by certain variable(s)
+
+`mutate` creates new variables
+
+`group_by`/`summarize` aggregates data ([pivot
+tables]{style="color:#cc0000"}!)
+
+`str_*` functions work easily with text
+:::
+
+------------------------------------------------------------------------
+
+## Syntax of a function
+
+<br>
+
+<br>
+
+`function(data, argument(s))`
+
+<br>
+
+. . .
+
+is the same as
+
+<br>
+
+`data %>%`
+
+    `function(argument(s))`
+
+------------------------------------------------------------------------
+
+## Filter
+
+<br>
+
+`filter` keeps or discards rows (aka observations)
+
+the `==` operator tests for equality
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  filter(COUNTRY == "CRO")
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% filter(COUNTRY == "CRO") %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Filter
+
+<br>
+
+the `|` operator signifies "or"
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  filter(COUNTRY == "EST" | 
+           COUNTRY == "FIN")
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% filter(COUNTRY == "EST" | COUNTRY == "FIN") %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Filter
+
+<br>
+
+the `%in%` operator allows for multiple options in a list
+
+<br>
+
+::: columns
+::: {.column width="51%"}
+```{r}
+#| eval: false
+elements %>% 
+  filter(COUNTRY %in% c("FRA",
+                      "ITA",
+                      "GER"))
+```
+:::
+
+::: {.column width="49%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% filter(COUNTRY %in% c("FRA","ITA","GER")) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Filter
+
+<br>
+
+the `&` operator combines conditions
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  filter(COUNTRY %in% c("FRA",
+                      "ITA",
+                      "GER") &
+         AnnPrec > 1000)
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% filter(COUNTRY %in% c("FRA","ITA","GER") & AnnPrec > 1000) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Select
+
+<br>
+
+`select` keeps or discards columns (aka variables)
+
+<br>
+
+::: columns
+::: {.column width="60%"}
+```{r}
+#| eval: false
+elements %>% 
+  select(Country, MeanTemp, AnnPrec)
+```
+:::
+
+::: {.column width="40%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% select(COUNTRY, MeanTemp, AnnPrec) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## The Pipe
+
+<br>
+
+the pipe `%>%` chains multiple functions together
+
+<br>
+
+::: columns
+::: {.column width="60%"}
+```{r}
+#| eval: false
+elements %>% 
+  select(COUNTRY, MeanTemp, AnnPrec) %>% 
+  filter(MeanTemp < 0)
+```
+:::
+
+::: {.column width="40%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% select(COUNTRY, MeanTemp, AnnPrec) %>% filter(MeanTemp < 0) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Arrange
+
+<br>
+
+`arrange` sorts data set by certain variable(s)
+
+use `desc()` to get descending order
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  arrange(desc(AnnPrec))
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% arrange(desc(AnnPrec)) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Arrange
+
+<br>
+
+can sort by multiple variables
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  arrange(Country, desc(AnnPrec))
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% arrange(COUNTRY, desc(AnnPrec)) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Count
+
+<br>
+
+`count` tallies data set by certain variable(s) (very useful for
+familiarizing yourself with data)
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  count(COUNTRY)
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% count(COUNTRY) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Count
+
+<br>
+
+can use `sort = TRUE` to order results
+
+<br>
+
+::: columns
+::: {.column width="70%"}
+```{r}
+#| eval: false
+elements %>% 
+  count(COUNTRY, soilclass, sort = TRUE)
+```
+:::
+
+::: {.column width="30%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% count(COUNTRY, soilclass, sort = TRUE)%>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Mutate
+
+<br>
+
+`mutate` creates new variables (with a single `=`)
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+elements %>% 
+  mutate(logZn = log10(Zn)) %>% 
+  select(COUNTRY, Zn, logZn)
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% mutate(logZn= log10(Zn)) %>% select(COUNTRY, Zn, logZn) %>%head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Group by / summarize
+
+<br>
+
+`group_by`/`summarize` aggregates data ([pivot
+tables]{style="color:#cc0000"}!)
+
+`group_by()` identifies the grouping variable(s) and `summarize()`
+specifies the aggregation
+
+<br>
+
+::: columns
+::: {.column width="70%"}
+```{r}
+#| eval: false
+elements %>% 
+  group_by(COUNTRY, soilclass) %>% 
+  summarize(MeanCountryTemp = mean(MeanTemp))
+```
+:::
+
+::: {.column width="30%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% 
+  group_by(COUNTRY) %>% 
+  summarize(MeanCountryTemp = mean(MeanTemp)) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Group by / summarize
+
+<br>
+
+useful arguments within `summarize`:
+
+`mean`, `median`, `sd`, `min`, `max`, `n`
+
+<br>
+
+::: columns
+::: {.column width="67%"}
+```{r}
+#| eval: false
+elements %>% 
+  group_by(COUNTRY) %>% 
+  summarize(minAP= min(AnnPrec),
+            maxAP = max(AnnPrec))
+```
+:::
+
+::: {.column width="33%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements %>% 
+   group_by(COUNTRY) %>% 
+  summarize(minAP= min(AnnPrec),
+            maxAP = max(AnnPrec)) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+# Using R effectively
+
+------------------------------------------------------------------------
+
+## Working in RStudio
+
+::: {.absolute top="10%" left="0" width="1031" height="529"}
+::: {style="text-align: center"}
+![](FIGURES/RStudio2.png)
+:::
+:::
+
+::: {.absolute top="66%" left="55%"}
+::: {style="color: #cc0000"}
+project files are here
+:::
+:::
+
+::: {.absolute top="28%" left="70%"}
+::: {style="color: #cc0000"}
+imported data shows up here
+:::
+:::
+
+::: {.absolute top="35%" left="25%"}
+::: {style="color: #cc0000"}
+code can also<br>go here
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Working in RStudio
+
+::: columns
+::: {.column width="50%"}
+**Typing in the console**
+
+-   useful for quick notes but disposable
+
+-   actions are saved but code is not (except history mechanism)
+
+-   one chunk of code is run at a time (`Return`, `Enter`)
+:::
+
+::: {.column width="50%"}
+::: fragment
+**Typing in a code file**
+
+-   script files have a `.R` extension
+
+-   code is saved and sections of any size can be run (`Cmd + Return`,
+    `Ctrl + Enter`)
+
+-   do \~95% of your typing in a code file instead of the console!
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Working with packages
+
+packages need to be installed on each computer you use
+
+```{r}
+#| eval: false
+# only need to do this once (per computer)
+install.packages("tidyverse")
+```
+
+<br>
+
+::: fragment
+packages need to be loaded/attached with `library()` at the beginning of
+every session
+
+```{r}
+#| eval: false
+# always put the necessary packages at the top of a code file
+library(tidyverse)
+library(hyperSpec)
+```
+:::
+
+<br>
+
+::: fragment
+access help files by typing `??tidyverse` or `??mutate` in the console
+:::
+
+------------------------------------------------------------------------
+
+## Organizing with projects
+
+<br>
+
+[**highly**]{style="color: #cc0000"} recommend using **projects** to
+stay organized
+
+<br>
+
+keeps code files and data files together, allowing for easier file path
+navigation and better reproducible work habits
+
+. . .
+
+<br>
+
+`File -> New Project`
+
+<br>
+
+------------------------------------------------------------------------
+
+## Organizing with projects
+
+::: {.absolute top="10%" left="0" width="1031" height="529"}
+::: {style="text-align: center"}
+![](FIGURES/RStudio2.png)
+:::
+:::
+
+::: {.absolute top="66%" left="55%"}
+::: {style="color: #cc0000"}
+project files are here
+:::
+:::
+
+::: {.absolute top="28%" left="70%"}
+::: {style="color: #cc0000"}
+imported data shows up here
+:::
+:::
+
+::: {.absolute top="35%" left="25%"}
+::: {style="color: #cc0000"}
+code can also<br>go here
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Accessing data
+
+use `read_csv()` to import a csv file
+
+```{r}
+#| eval: false
+# the file path is this simple if you use projects!
+# ?read_csv() in the console will bring up the help file with more options
+faculty <- read_csv("elements.csv")
+```
+
+<br>
+
+::: fragment
+the [readxl](https://readxl.tidyverse.org/) package is helpful for Excel
+files
+
+```{r}
+#| eval: false
+# needs to be loaded but not installed as it's part of the tidyverse
+library(readxl)
+faculty <- read_excel("elements.xlsx", sheet = 1)
+```
+:::
+
+<br>
+
+::: fragment
+view the data with `View(elements)` or by clicking on the data name in
+the Environment pane
+:::
+
+## Stringr functions
+
+<br>
+
+functions from `stringr` (which all start with `str_`) are useful for
+working with text data
+
+::: columns
+::: {.column width="58%"}
+```{r}
+#| eval: false
+elements%>% 
+  filter(str_detect(soilclass, "l"))
+```
+:::
+
+::: {.column width="42%"}
+::: fragment
+::: {style="font-size: 0.45em"}
+```{r}
+#| echo: false
+knitr::kable(elements%>% 
+  filter(str_detect(soilclass, "l")) %>% head(10))
+```
+:::
+:::
+:::
+:::
+
+## Stringr functions
+
+[https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/) R Studio Cheatsheets
+
+![](FIGURES/stringr.png){fig-align="center"}
+
+# Data visualization
+
+------------------------------------------------------------------------
+
+## ggplot2
+
+<br>
+
+`ggplot2` is the data visualization package that is loaded with the
+`tidyverse`
+
+<br>
+
+the [g]{style="color:#cc0000"}rammar of
+[g]{style="color:#cc0000"}raphics maps data to the aesthetic attributes
+of geometric points
+
+. . .
+
+<br>
+
+encoding data into visual cues (e.g., length, color, position, size) is
+how we signify changes and comparisons
+
+<br>
+
+## Bar chart
+
+```{r}
+#| code-line-numbers: "1-2|3|4"
+#| eval: false
+elements %>%
+  count(COUNTRY) %>%
+  ggplot(aes(x = COUNTRY, y = n)) +
+  geom_bar(stat = "identity")
+```
+
+```{r}
+#| echo: false
+#| fig-height: 4
+#| fig-align: "center"
+elements %>%
+  count(COUNTRY) %>%
+  ggplot(aes(x = COUNTRY, y = n)) +
+  geom_bar(stat = "identity")
+```
+
+to combine lines into one code chunk, use `+` instead of `%>%`
+
+## Bar chart
+
+We can create a prettier plot pretty easily
+
+```{r}
+#| code-fold: true
+#| code-summary: "expand for full code"
+#| fig-align: "center"
+elements %>%
+  count(COUNTRY) %>%
+  ggplot(aes(x = reorder(COUNTRY, -n), y = n)) +
+  geom_bar(stat = "identity", fill = "#cc0000") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  geom_text(aes(label = n), vjust = -0.5) +
+  labs(x = NULL, y = NULL,
+       title = "Soil Samples Count by Country") +
+  theme_linedraw() +
+  theme(panel.grid.major.x = element_blank(),
+        axis.ticks = element_blank())
+```
+
+
+## Putting it all together
+
+
+With what we've done so far, your `.R` file could:
+
+::: incremental
+-   import your data files
+-   [document all data cleaning and preparation steps and
+    decisions]{style="color:#cc0000"}
+-   produce presentation ready graphic summarizing your results
+:::
+
+. . .
+
+::: {style="text-align: center"}
+**and that file would make it extremely easy for you or someone else to
+reproduce this analysis with new data in the future**
+:::
+
+## R Markdown
+
+<br>
+
+using RStudio, create `.Rmd` documents that combine text, code, and
+graphics
+
+. . .
+
+<br>
+
+many output formats: html, pdf, Word, slides
+
+. . .
+
+<br>
+
+exceedingly useful for [parameterized reporting]{style="color:#cc0000"}:
+can create an R-based PDF report and generate it automatically for, say,
+each department
+
+## R Markdown
+
+![](FIGURES/rmarkdown.png){fig-align="center" width="1200"}
+
+
+## Internal packages
+
+<br>
+
+you can also create your *own* packages!
+
+<br>
+
+your package can hold:
+
+-   common data sets that are used across projects
+-   custom `ggplot2` themes
+-   common functions and calculations (and their definitions!)
+-   can be stored on a shared drive to facilitate collaboration
+
+
+
+# Focus on: OPEN SCIENCE
+---------------------------------------------------------------
+## Open Science
+
+::: callout-important
+**open science** is defined as an inclusive construct that combines
+various movements and practices aiming to make multilingual scientific
+knowledge openly available, accessible and reusable for everyone, to
+increase scientific collaborations and sharing of information for the
+benefits of science and society... It builds on the following key
+pillars: open scientific knowledge, open science infrastructures,
+science communication, open engagement of societal actors and open
+dialogue with other knowledge systems.
+:::
+
+## Open Science
+
+::: columns
+::: {.column width="50%"}
+-   transparency and repeatability
+-   data formats
+-   data repositories
+:::
+
+::: {.column width="50%"}
+![](FIGURES/unesco-1.png){fig-align="center" width="448"}
+:::
+:::
+
+## Workflow
+
+![Promoting openness at different stages of the research process (Open
+Science and Research Initiative,
+2014)](FIGURES/open_science_01.png){fig-align="center"}
+
+# Learn more about R
+
+------------------------------------------------------------------------
+
+## General
+
+[https://r4ds.had.co.nz](https://r4ds.had.co.nz/) R for Data Science the
+ultimate guide
+
+[https://rstudio-conf-2020.github.io/r-for-excel](https://rstudio-conf-2020.github.io/r-for-excel/)
+R for Excel users
+
+[https://stat545.com)](https://stat545.com/) an online book on
+reproducible data analysis in R
+
+[https://education.rstudio.com](https://education.rstudio.com/) RStudio
+Education
+
+## R Markdown and packages
+
+
+**R Markdown**
+
+[https://rmarkdown.rstudio.com/](https://rmarkdown.rstudio.com/lesson-1.html)
+The official R Markdown website
+
+[https://bookdown.org/yihui/rmarkdown](https://bookdown.org/yihui/rmarkdown/)
+R Markdown: The Definitive Guide
+
+**internal packages**
+
+[https://emilyriederer.netlify.app/post/team-of-packages](https://emilyriederer.netlify.app/post/team-of-packages/)
+A comprehensive theoretical explainer
+
+[https://www.tidyverse.org/learn](https://www.tidyverse.org/learn/)
+Learn `tidyverse`
+
+## ggplot2 resources
+
+<https://r4ds.had.co.nz/data-visualisation.html> R for Data Science
+
+
+<https://socviz.co/index.html> Data Visualization: a practical
+introduction <br> <https://ggplot2-book.org/> ggplot2 book
+
+
+<https://r-graph-gallery.com/> R graph gallery
+
+## Take Home Message
+
+::: {style="font-size: 0.9em"}
+-   R Environment open source multi-OS solution for data science
+-   `tidyverse` packages for data wrangling
+-   `hyperSpec` and `Chemospec` for spectral data processing
+-   `ggplot2` for visualisation
+-   `RMarkdown`, `Quarto` for reports, presentations, articles, books,
+    websites
+-   Repeatability and transparency of code-driven analysis -open science
+-   Huge library of free materials to learn and master R related skills
+:::
+
+## My last secret
+
+The goal of the `here` package is to enable easy file referencing in
+project-oriented workflows. In contrast to using `setwd()`, which is
+fragile and dependent on the way you organize your files, `here` uses
+the top-level directory of a project to easily build paths to files.
+
+![](FIGURES/package_here.png){fig-align="center" width="848"}
+
+##  {background-color="white"}
+
+> **THANK YOU FOR YOUR ATTENTION**
+
+![](FIGURES/Thank-you-word-cloud.jpg){fig-align="center" height="450"}
