@@ -1,0 +1,623 @@
+---
+title: "Critical aspects of statistical data analysis:"
+subtitle: "Experiment design, pre-processing, multivariate methods, visualisation and reporting"
+author: "Krzysztof Banas"
+date: 19.10.2022
+format: 
+    revealjs:
+        chalkboard: 
+          boardmarker-width: 5
+from: markdown+emoji
+execute:
+  echo: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Overview
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(tidyverse) # load tidyverse package
+library(datasauRus)
+library(ggsci)
+```
+
+::: incremental
+-   Intro :wave:
+-   Workshop materials :arrow_down:
+-   Break :clock9:
+-   Lecture 3.1 plan :clipboard:
+:::
+
+## Lecture 3.1 plan
+
+::: incremental
+1.  Scientific Method
+2.  Data science
+3.  Types of visualisation
+4.  Normal data
+5.  Can we trust mean value?
+6.  Hypothesis testing
+7.  Overview of multivariate statistical techniques
+:::
+
+## Accessing workshop materials
+
+![](FIGURES/GitHub.png){fig-align="center" width="1200"}
+
+<br>
+
+<https://github.com/krzbanas/IAEA-2022>
+
+click big green Code button and select "Download ZIP"
+
+## Scientific Method
+
+::: {style="font-size: 0.9em"}
+1.  Define a question
+2.  Gather information and resources (observe)
+3.  **Form an explanatory hypothesis**
+4.  **Test the hypothesis by performing an experiment and collecting
+    data in a reproducible manner**
+5.  **Analyze the data**
+6.  **Interpret the data and draw conclusions that serve as a starting
+    point for a new hypothesis**
+7.  Publish results
+8.  Retest (frequently done by other scientists)
+:::
+
+## Critical Aspects
+
+1.  Data Wrangling & Cleaning
+2.  Data Preprocessing & Feature Engineering
+3.  Data Visualization
+4.  Machine Learning
+5.  Time Series and Forecasting
+6.  Text Analysis
+7.  Functional Programming
+8.  Reporting
+9.  Applications and deployment
+
+## 1. Data Wrangling & Cleaning
+
+-   Working with outliers
+-   Missing data
+-   Reshaping data
+-   Aggregation
+-   Filtering
+-   Selecting
+-   Calculating
+
+## 2. Data Preprocessing & Feature Engineering
+
+-   Preparing data for machine learning
+-   Engineering features (dates, text, aggregates)
+
+## 3. Data Visualization
+
+-   Interactive and static visualizations
+-   For data exploration and for presentation
+
+## 4. Machine Learning
+
+-   Supervised classification
+-   Supervised regression
+-   Unsupervised clustering
+-   Dimensionality reduction
+-   XGBoost, SVM, Random Forest, GLM
+-   K-Means
+-   UMAP
+
+## 5. Time Series and forecasting
+
+-   Working with date/datetime data
+-   aggregating
+-   transforming
+-   visualising time series
+-   ARIMA
+
+## 6. Text
+
+-   Working with text data
+-   Strings
+-   Machine learning
+-   Text features
+
+## 7. Functional Programming
+
+-   Making reusable functions
+-   Sourcing code
+-   Iteration
+-   Loops and mapping
+
+## 8. Reporting
+
+-   RMarkdown
+-   Iteractive HTML
+-   Static PDF
+
+## 9. Applications and deployment
+
+-   Building Shiny web applications
+-   Flexdashboard
+-   Bootstrap
+-   Deployment
+-   Cloud (AWS, Azure, GCP),
+-   Docker
+-   Git
+
+# Data visualisation
+
+------------------------------------------------------------------------
+
+## Plot types Part 1
+
+![](FIGURES/plot_types_01.png){fig-align="center" width="2000"}
+
+## Plot types Part 2
+
+![](FIGURES/plot_types_02.png){width="1600"}{fig-align="center"}
+
+## Distributions 1
+
+![](FIGURES/distribution1.png){width="1600"}{fig-align="center"}
+
+## Distributions 2
+
+![](FIGURES/distribution2.png){width="1600"}{fig-align="center"}
+
+## Distributions 3
+
+![](FIGURES/distribution3.png){width="1600"}{fig-align="center"}
+
+## Correlation 1
+
+![](FIGURES/correlation1.png){width="1600"}{fig-align="center"}
+
+## Correlation 2
+
+![](FIGURES/correlation2.png){width="1600"}{fig-align="center"}
+
+## Spatial
+
+![](FIGURES/spatial.png){width="1600"}{fig-align="center"}
+
+## Ranking
+
+![](FIGURES/ranking.png){width="1600"}{fig-align="center"}
+
+## Flow
+
+![](FIGURES/flow_graph.png){width="1600"}{fig-align="center"}
+
+## Data visualisation: colour scales
+
+![](FIGURES/colorblindness.png){width="1000"}
+
+## Sequential
+
+![](FIGURES/sequential.png){fig-align="center"}
+
+## Diverging
+
+![](FIGURES/diverging.png){fig-align="center"}
+
+## Qualitative
+
+![](FIGURES/qualitative.png){fig-align="center"}
+
+## Data Visualization
+
+-   core idea : mapping data to geometric objects and their visual
+    attributes (points, lines, bars, polygons ) (position, shape, colour
+    hue, colour luminance/saturation)
+-   common analytical tasks
+-   visual perception
+-   effective charts suggestions
+
+## Visualization Concept
+
+![](FIGURES/visualization_concept.png){width="574"}
+
+## Some examples - Google Charts
+
+![](FIGURES/some_options_google_chart.png){width="525"}
+
+## Some examples - Google Charts
+
+![](FIGURES/example_ggplot2.png){width="518"}
+
+## Data Analysis Cycle
+
+-   Data Preparation
+-   Core Analysis
+-   Reporting
+
+## Graphics for exploration
+
+-   for data verification and understanding
+-   data analyst is the only consumer
+-   typically quick and without taking care of visual appearance
+-   short lifespan
+
+## Graphics for communication
+
+-   for presenting data
+-   understandable by others
+-   visual appearance and design principles
+-   require a lot of iterations before final version
+
+## What to consider?
+
+-   How many variables (1, 2, 3 or more) ?
+-   What type of variables (quantitative, qualitative, time/date,
+    location)?
+-   What do you want to see (variation, increasing pattern, outliers,
+    noise)
+
+## Some tips Part 1
+
+::: columns
+::: {.column width="50%"}
+-   don't use 3-D bars
+:::
+
+::: {.column width="50%"}
+![](FIGURES/3D_bars.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 1
+
+::: columns
+::: {.column width="50%"}
+-   don't use 3-D bars
+-   don't use multiple colors to represent the same kind of data
+:::
+
+::: {.column width="50%"}
+![](FIGURES/multi_colors.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 1
+
+::: columns
+::: {.column width="50%"}
+-   don't use 3-D bars
+-   don't use multiple colors to represent the same kind of data
+-   don't truncate baseline of bar charts
+:::
+
+::: {.column width="50%"}
+![](FIGURES/where_is_zero.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 1
+
+::: columns
+::: {.column width="50%"}
+-   don't use 3-D bars
+-   don't use multiple colors to represent the same kind of data
+-   don't truncate baseline of bar charts
+:::
+
+::: {.column width="50%"}
+![](FIGURES/here_is_zero.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+:::
+
+::: {.column width="50%"}
+![](FIGURES/no_zebra_pattern.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+:::
+
+::: {.column width="50%"}
+![](FIGURES/from_light_to_dark.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+-   when working with two colors avoid complementary (opposite) colors
+:::
+
+::: {.column width="50%"}
+![](FIGURES/opposite_colors.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+-   when working with two colors avoid complementary (opposite) colors
+:::
+
+::: {.column width="50%"}
+![](FIGURES/shade_colors.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+-   when working with two colors avoid complementary (opposite) colors
+-   avoid spaghetti lines
+:::
+
+::: {.column width="50%"}
+![](FIGURES/spaghetti_lines.png){fig-align="center"}
+:::
+:::
+
+## Some tips Part 2
+
+::: columns
+::: {.column width="50%"}
+-   no zebra pattern
+-   when working with two colors avoid complementary (opposite) colors
+-   avoid spaghetti lines
+:::
+
+::: {.column width="50%"}
+![](FIGURES/panels.png){fig-align="center"}
+:::
+:::
+
+## Data inspection (distribution, normality)
+
+::: {style="font-size: 0.8em"}
+Many statistical tests rely on *assumption of normality*
+
+-   one sample t-test
+-   two sample t-test
+-   ANOVA
+-   linear regression
+-   MRC
+-   Hierarchical linear modeling
+
+If this assumption is violated the results of these tests become
+unreliable and we are unable to generalize our findings from the sample
+data to the overall population with confidence.
+:::
+
+## How to check?
+
+::: {style="font-size: 0.8em"}
+-   visually
+
+    1.  histogram
+    2.  distribution
+    3.  Q-Q plot
+    4.  violin plot
+
+-   by formal statistical tests
+
+    1.  Shapiro-Wilk
+    2.  Kolmogorov-Smirnov (Lilliefors)
+    3.  Jarque-Bera
+    4.  Anderson-Darling
+    5.  Cramer-von Mises
+    6.  Pearson chi-square
+:::
+
+## Q-Q Plot
+
+```{r, echo=FALSE,  out.width = "60%"}
+knitr::include_graphics("FIGURES/qq_normality.png")
+```
+
+## What to do if we fail the test?
+
+-   transform data
+
+    1.  log transformation
+    2.  square root transformation
+    3.  cube root transformation
+    4.  Box-Cox transformation
+
+-   according to Central Limit Theorem, no matter what distribution is,
+    the sampling distribution of mean tends to be normal if the sample
+    is large enough (n ≥ 30)
+
+-   use statistical tests for not normal distributions (non-parametric
+    tests)
+
+## Log transformation
+
+```{r, echo=FALSE,  out.width = "60%"}
+knitr::include_graphics("FIGURES/transformed.png")
+```
+
+# Warning: DataSaurus
+
+------------------------------------------------------------------------
+
+## Datasaurus
+
+```{r, echo=FALSE}
+knitr::include_graphics("FIGURES/DinoSequentialSmaller.gif")
+```
+
+## Datasaurus Dozen
+
+```{r, fig.width=12}
+
+datasaurus_dozen %>%
+  ggplot(aes(x, y, color = dataset)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~dataset, ncol = 5)+theme_bw()+
+ scale_color_d3("category20")
+
+```
+
+## Summary Statistics
+
+```{r }
+knitr::kable(
+datasaurus_dozen %>%
+  group_by(dataset) %>%
+  summarise(across(c(x, y), list(mean = mean, sd = sd)),
+    x_y_cor = cor(x, y)))
+```
+
+## Boxplots
+
+```{r, echo=FALSE}
+knitr::include_graphics("FIGURES/boxplots.gif")
+```
+
+## Boxplots and Violin Plots
+
+```{r, echo=FALSE}
+knitr::include_graphics("FIGURES/BoxViolinSmaller.gif")
+```
+
+## Hypothesis testing
+
+## Statistical Tests Reporting for Frequentist and Bayesians
+
+```{r, echo=FALSE,  out.width = "80%"}
+knitr::include_graphics("FIGURES/test_reading.png")
+```
+
+## Reporting
+
+```{r, echo=FALSE,  out.width = "80%"}
+knitr::include_graphics("FIGURES/hemozoin_with_tests.png")
+```
+
+# Overview of multivariate statistical techniques
+
+------------------------------------------------------------------------
+
+::: columns
+::: {.column width="50%"}
+Unsupervised:
+
+-   PCA
+-   k-Mean Clustering
+-   HCA
+:::
+
+::: {.column width="50%"}
+Supervised:
+
+-   Naive Bayes Classifier
+-   k-Nearest Neighbours
+-   Linear Regression
+-   Logistic Regression
+-   Tree-Based Models
+-   Artificial Neural Networks
+-   Support Vector Machine
+:::
+:::
+
+## Meta analysis and model validation
+
+::: columns
+::: {.column width="50%"}
+Meta Analysis:
+
+-   Regularisation
+-   Boosting
+-   Bagging
+-   Prunning
+-   Random Forest
+:::
+
+::: {.column width="50%"}
+Model Validation:
+
+-   Performance Metrics
+-   Bias-Variance Trade-off
+-   Cross-validation
+-   Learning Curves
+:::
+:::
+
+## Machine Learning Workflow
+
+![](FIGURES/ML_workflow.png){fig-align="center"}
+
+## Stages
+
+-   pre-processing data,
+-   creating a task and making a learner,
+-   setting hyperparameters, train a model and predict,
+-   measuring performance,
+-   resampling a learner and tuning hyperparameters,
+
+## Experiment
+
+## Data preprocessing
+
+-   data quality check
+-   baseline correction
+-   outlier removal
+-   normalization/scaling
+
+## Data Evaluation
+
+-   dimension reduction
+-   clustering, grouping
+-   visualization
+-   reporting
+
+## Results reporting
+
+-   reports, presentations
+-   journal articles, chapters, books
+-   blog, website
+
+## Resources
+
+[https://www.dataquest.io/data-science-resources/](https://www.dataquest.io/data-science-resources/) Data Science Resources
+
+[https://r-charts.com/](https://r-charts.com/) R Charts
+
+[https://r-graph-gallery.com/](https://r-graph-gallery.com/) R Graph Gallery
+
+## Take home message(s)
+
+-   scientific method is still valid approach in the research so:
+    1.  hypothise
+    2.  measure
+    3.  analyse
+    4.  repeat!
+-   take care of your data distribution and adequate statistical tests
+-   visualization of data is of utmost importance
+-   do not trust boxplots or summary statistics (mean, SD etc)
+
+
+
+##  {background-color="white"}
+
+> **THANK YOU FOR YOUR ATTENTION**
+
+![](FIGURES/Thank-you-word-cloud.jpg){fig-align="center" height="450"}
